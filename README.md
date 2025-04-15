@@ -1,6 +1,6 @@
 # Secure Messaging Agent
 
-This project implements a secure messaging agent using public key cryptography. The main component is the `SecureAgent` class, which facilitates secure communication between agents by signing and verifying messages.
+This project implements a secure messaging agent using OpenAI and public key cryptography. The main component is the `SecureAgent` class, which facilitates secure communication between agents by signing and verifying messages.
 
 ## Features
 
@@ -61,8 +61,8 @@ python clientagent.py --web
 
 Simulation of invalid use cases for testing robustness:
   - `--debug true` (default): Normal operation, all signatures and certificates are valid.
-  - `--debug untrusted`: Simulates use of a self-signed (untrusted) certificate for Alice. Use this to test certificate verification failure handling.
-  - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed). Use this to test detection of message tampering.
+  - `--debug untrusted`: Simulates use of a self-signed (untrusted) certificate for Alice. 
+  - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed).
 
 ## Logging of Invalid Use Cases
 
