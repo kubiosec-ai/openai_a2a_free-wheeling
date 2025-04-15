@@ -45,12 +45,6 @@ Start the client (Alice):
 ```sh
 python clientagent.py
 ```
-
-You can also specify a custom question to send using the `--prompt` option:
-```sh
-python clientagent.py --prompt "What is AI?"
-```
-
 ### HTTP (Web) Mode
 
 Start the server (Bob) in web mode:
@@ -69,6 +63,7 @@ Simulation of invalid use cases for testing robustness:
   - `--debug true` (default): Normal operation, all signatures and certificates are valid.
   - `--debug untrusted`: Simulates use of a self-signed (untrusted) certificate for Alice. 
   - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed).
+  - `--prompt` "Your question here?"
 
 ## Logging of Invalid Use Cases
 
