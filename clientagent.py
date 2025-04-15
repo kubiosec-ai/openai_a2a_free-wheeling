@@ -5,6 +5,7 @@ import openai
 import os
 import argparse
 import requests
+import sys
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography import x509
@@ -168,11 +169,18 @@ if __name__ == "__main__":
         print("Client/Agent Alice connected to server via TCP.")
 
     try:
-        # Alice uses provided prompt or generates a question dynamically
-        if args.prompt:
+        # Alice uses provided prompt, stdin, or generates a question dynamically
+        if args.prompt is not None:
             question = args.prompt
+        elif not sys.stdin.isatty():
+            question = sys.stdin.read()
+            if question is not None:
+                question = question.strip()
         else:
             question = agent_a.generate_question()
+        if not question:
+            print("Error: No prompt provided via --prompt, stdin, or OpenAI.")
+            sys.exit(1)
         agent_a.send_message(question, "Bob", connection, use_web=args.web)
         print("Alice sent message to Bob. Waiting for reply...")
 
