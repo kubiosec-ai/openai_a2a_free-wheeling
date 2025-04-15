@@ -57,13 +57,6 @@ Start the client (Alice) in web mode:
 python clientagent.py --web
 ```
 
-### Debug/Fake Signature Mode
-
-You can use the `--debug fake` flag to test signature verification failures:
-```sh
-python clientagent.py --debug fake
-```
-
 ## Debug and Simulation Flags
 
 - `--debug` flag controls simulation of invalid use cases for testing robustness:
