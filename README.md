@@ -1,6 +1,7 @@
 # Secure Messaging Agent
 
 This project implements a secure messaging agent using OpenAI and public key cryptography. The main component is the `SecureAgent` class, which facilitates secure communication between agents by signing and verifying messages.
+Both agents are using OpenAI to respectively generate and answer a random question.
 
 ## Features
 
