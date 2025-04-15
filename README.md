@@ -46,6 +46,11 @@ Start the client (Alice):
 python clientagent.py
 ```
 
+You can also specify a custom question to send using the `--prompt` option:
+```sh
+python clientagent.py --prompt "What is AI?"
+```
+
 ### HTTP (Web) Mode
 
 Start the server (Bob) in web mode:

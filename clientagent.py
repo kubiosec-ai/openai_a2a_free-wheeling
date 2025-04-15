@@ -152,6 +152,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", default="true", choices=["true", "untrusted", "invalid"], help="Set to 'untrusted' to use a self-signed cert, 'invalid' to tamper with the signature, or 'true' for normal operation.")
     parser.add_argument("--web", action="store_true", help="Use HTTP for communication instead of TCP.")
+    parser.add_argument("--prompt", type=str, default=None, help="Specify a question to send instead of generating one with OpenAI.")
     args = parser.parse_args()
     print(f"DEBUG MODE: {args.debug}")
 
@@ -167,8 +168,11 @@ if __name__ == "__main__":
         print("Client/Agent Alice connected to server via TCP.")
 
     try:
-        # Alice generates a question dynamically
-        question = agent_a.generate_question()
+        # Alice uses provided prompt or generates a question dynamically
+        if args.prompt:
+            question = args.prompt
+        else:
+            question = agent_a.generate_question()
         agent_a.send_message(question, "Bob", connection, use_web=args.web)
         print("Alice sent message to Bob. Waiting for reply...")
 
