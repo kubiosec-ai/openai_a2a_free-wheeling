@@ -59,7 +59,7 @@ python clientagent.py --web
 
 ## Debug and Simulation Flags
 
-- `--debug` flag controls simulation of invalid use cases for testing robustness:
+Simulation of invalid use cases for testing robustness:
   - `--debug true` (default): Normal operation, all signatures and certificates are valid.  
   - `--debug fake`: Simulates an invalid signature by sending a deliberately corrupted signature. Use this to test signature verification failure handling.  
   - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed). Use this to test detection of message tampering.  
