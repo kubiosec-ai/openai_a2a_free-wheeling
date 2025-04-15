@@ -4,6 +4,7 @@ import json
 import openai
 import os
 import argparse
+import threading
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 
@@ -84,6 +85,17 @@ class SecureAgent:
         )
         return chat_completion.choices[0].message.content
 
+def handle_client(conn, addr, agent_b):
+    with conn:
+        print(f"Connected by {addr}")
+        try:
+            msg_obj = agent_b.receive_message(conn)
+            response_b = agent_b.respond_using_openai(msg_obj['content'])
+            agent_b.send_message(response_b, msg_obj['from'], conn)
+            print("Bob sent response back to Alice!")
+        except Exception as e:
+            print(f"Server error: {e}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", default="true", choices=["true", "fake"], help="Set to 'fake' to send a fake signature on reply.")
@@ -94,19 +106,11 @@ if __name__ == "__main__":
 
     HOST, PORT = '127.0.0.1', 9999
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((HOST, PORT))
-        s.listen(1)
+        s.listen()
         print("Server/Agent Bob is listening on port 9999...")
-
-        conn, addr = s.accept()
-        with conn:
-            print(f"Connected by {addr}")
-            try:
-                # Bob receives Alice's message
-                msg_obj = agent_b.receive_message(conn)
-                # Bob generates a reply and possibly fakes the signature if in debug mode
-                response_b = agent_b.respond_using_openai(msg_obj['content'])
-                agent_b.send_message(response_b, msg_obj['from'], conn)
-                print("Bob sent response back to Alice!")
-            except Exception as e:
-                print(f"Server error: {e}")
+        while True:
+            conn, addr = s.accept()
+            client_thread = threading.Thread(target=handle_client, args=(conn, addr, agent_b), daemon=True)
+            client_thread.start()
