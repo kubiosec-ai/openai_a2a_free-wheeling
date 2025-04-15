@@ -4,9 +4,9 @@ This project implements a secure messaging agent using public key cryptography. 
 
 ## Features
 
-- **Public Key Cryptography**: Utilizes RSA for secure message signing and verification.  
-- **Debug Modes**: Supports different modes for testing, including a mode that sends a fake signature.  
-- **Socket and HTTP Communication**: Supports both TCP socket and HTTP (web) message exchange.  
+- **Public Key Cryptography**: Utilizes RSA for secure message signing and verification.
+- **Debug Modes**: Supports different modes for testing, including untrusted and invalid signature scenarios.
+- **Socket and HTTP Communication**: Supports both TCP socket and HTTP (web) message exchange.
 
 ## Setup and Installation
 
@@ -60,16 +60,16 @@ python clientagent.py --web
 ## Debug and Simulation Flags
 
 Simulation of invalid use cases for testing robustness:
-  - `--debug true` (default): Normal operation, all signatures and certificates are valid.  
-  - `--debug fake`: Simulates an invalid signature by sending a deliberately corrupted signature. Use this to test signature verification failure handling.  
-  - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed). Use this to test detection of message tampering.  
+  - `--debug true` (default): Normal operation, all signatures and certificates are valid.
+  - `--debug untrusted`: Simulates use of a self-signed (untrusted) certificate for Alice. Use this to test certificate verification failure handling.
+  - `--debug invalid`: Simulates a tampered message after signing (e.g., modifies the message content after it is signed). Use this to test detection of message tampering.
 
 ## Logging of Invalid Use Cases
 
-- The server uses Python's `logging` module to log invalid certificate and signature events.  
-  - All invalid or untrusted certificate and signature attempts are logged with `ERROR` severity.  
-  - Normal message receipt is logged with `INFO` severity.  
-  - Logs are printed to the console by default.  
+- The server uses Python's `logging` module to log invalid certificate and signature events.
+  - All invalid or untrusted certificate and signature attempts are logged with `ERROR` severity.
+  - Normal message receipt is logged with `INFO` severity.
+  - Logs are printed to the console by default.
 
 ## Example: Simulating Invalid Use Cases
 
@@ -83,28 +83,28 @@ To simulate a tampered message after signing:
 python clientagent.py --debug invalid
 ```
 
-Check the server console output for error logs indicating detection of invalid signatures or certificates.  
+Check the server console output for error logs indicating detection of invalid signatures or certificates.
 
 ## Application Concept and Security Model
 
-This application demonstrates secure, authenticated message exchange between two agents (Alice and Bob) using public key cryptography and X.509 certificates.  
+This application demonstrates secure, authenticated message exchange between two agents (Alice and Bob) using public key cryptography and X.509 certificates.
 
-- **Certificate Authority (CA):** A CA certificate is used to sign agent certificates. Both Alice and Bob trust the CA.  
-- **Agent Certificates:** Each agent (Alice, Bob) has a private key and a certificate signed by the CA.  
-- **Message Signing:** When sending a message, the sender signs the message content with their private key and attaches their certificate.  
-- **Verification:** The receiver verifies the sender's certificate using the CA, then verifies the message signature using the sender's public key from the certificate.  
-- **Tamper-Proof:** As long as the CA certificate is trusted and private keys are secure, the system is tamper-proof and authenticates both sender and message integrity.  
+- **Certificate Authority (CA):** A CA certificate is used to sign agent certificates. Both Alice and Bob trust the CA.
+- **Agent Certificates:** Each agent (Alice, Bob) has a private key and a certificate signed by the CA.
+- **Message Signing:** When sending a message, the sender signs the message content with their private key and attaches their certificate.
+- **Verification:** The receiver verifies the sender's certificate using the CA, then verifies the message signature using the sender's public key from the certificate.
+- **Tamper-Proof:** As long as the CA certificate is trusted and private keys are secure, the system is tamper-proof and authenticates both sender and message integrity.
 
 ### Communication Modes
 
-- **TCP Socket:** By default, messages are exchanged as JSON blobs over a TCP connection.  
-- **HTTP (Web):** If `--web` is specified, the server runs a Flask HTTP server and the client uses HTTP POST/GET to exchange messages.  
+- **TCP Socket:** By default, messages are exchanged as JSON blobs over a TCP connection.
+- **HTTP (Web):** If `--web` is specified, the server runs a Flask HTTP server and the client uses HTTP POST/GET to exchange messages.
 
 ### Message Flow
 
-1. The client (Alice) generates a question and sends it to the server (Bob), signing the message and attaching her certificate.  
-2. The server (Bob) verifies Alice's certificate and signature, generates a response, signs it, and sends it back with his certificate.  
-3. The client (Alice) verifies Bob's certificate and signature upon receiving the reply.  
+1. The client (Alice) generates a question and sends it to the server (Bob), signing the message and attaching her certificate.
+2. The server (Bob) verifies Alice's certificate and signature, generates a response, signs it, and sends it back with his certificate.
+3. The client (Alice) verifies Bob's certificate and signature upon receiving the reply.
 
 ## Contributing
 
