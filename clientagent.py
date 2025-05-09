@@ -110,7 +110,7 @@ class SecureAgent:
                 'signature': signature
             }
         if use_web:
-            response = requests.post(f"http://{connection}/send", json=msg_obj)
+            response = requests.post(f"http://{connection}/send", json=msg_obj, timeout=60)
             if response.status_code != 200:
                 raise ValueError("Failed to send message via HTTP")
         else:
@@ -119,7 +119,7 @@ class SecureAgent:
     def receive_message(self, connection, use_web=False):
         
         if use_web:
-            response = requests.get(f"http://{connection}/receive")
+            response = requests.get(f"http://{connection}/receive", timeout=60)
             if response.status_code != 200:
                 raise ValueError("Failed to receive message via HTTP")
             msg_obj = response.json()
