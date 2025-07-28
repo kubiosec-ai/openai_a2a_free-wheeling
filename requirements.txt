@@ -2,3 +2,4 @@ openai
 cryptography
 flask  
 requests  
+security==1.3.1

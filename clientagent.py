@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
+from security import safe_requests
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -119,7 +120,7 @@ class SecureAgent:
     def receive_message(self, connection, use_web=False):
         
         if use_web:
-            response = requests.get(f"http://{connection}/receive")
+            response = safe_requests.get(f"http://{connection}/receive")
             if response.status_code != 200:
                 raise ValueError("Failed to receive message via HTTP")
             msg_obj = response.json()
